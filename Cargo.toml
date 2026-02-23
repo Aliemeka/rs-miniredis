@@ -2,6 +2,14 @@
 name = "rs-redis-clone"
 version = "0.1.0"
 edition = "2024"
+authors = [
+    "Emeka Allison <emeka.allison4@gmail.com>",
+    "Victory Aghazie <professionalvicks@gmail.com>",
+    "Samuel Achilike <samuel.e.achilike@gmail.com>",
+    "Salama Jatau <salamajatau@gmail.com>",
+    "Ajaezo Kingsley <ajaezokingsley@gmail.com>",
+    "Hadassah <tommy4gold@gmail.com>",
+]
 
 [dependencies]
 tokio = { version = "1.49.0", features = ["full"] }
