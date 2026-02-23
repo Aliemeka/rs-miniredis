@@ -12,7 +12,7 @@ A lightweight, blazingly-fast in-memory key-value store inspired by Redis, built
 
 ## Requirements
 
-- [Rust](https://www.rust-lang.org/tools/install) (edition 2024)
+- [Rust](https://www.rust-lang.org/tools/install)
 
 ## Running the Server
 
