@@ -65,11 +65,11 @@ echo "DEL name" | nc 127.0.0.1 6379
 
 ## Commands
 
-| Command | Syntax                    | Description                                                     |
-| ------- | ------------------------- | --------------------------------------------------------------- |
-| `SET`   | `SET <key> <value> [ttl]` | Store a value. Optional TTL in seconds (default: 60).           |
-| `GET`   | `GET <key>`               | Retrieve a value by key. Returns `Nil` if not found or expired. |
-| `DEL`   | `DEL <key>`               | Delete a key.                                                   |
+| Command           | Syntax                        | Description                                                     |
+| ----------------- | ----------------------------- | --------------------------------------------------------------- |
+| `SET`             | `SET <key> <value> [ttl]`     | Store a value. Optional TTL in seconds (default: 60).           |
+| `GET`             | `GET <key>`                   | Retrieve a value by key. Returns `Nil` if not found or expired. |
+| `DEL` or `DELETE` | `DEL <key>` or `DELETE <key>` | Delete a key.                                                   |
 
 ### List Values
 
