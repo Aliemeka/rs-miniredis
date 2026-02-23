@@ -91,6 +91,9 @@ async fn handle_client(stream: TcpStream, state: SharedState) {
                 "OK\r\n".to_string()
             }
             "GET" => {
+                if parts.clone().count() != 1 {
+                    "Error: GET command requires exactly 1 argument\r\n".to_string();
+                }
                 let key = parts.next().unwrap_or("");
 
                 if let Some(value) = state.get(key).await {
@@ -110,11 +113,89 @@ async fn handle_client(stream: TcpStream, state: SharedState) {
                     "Nil\r\n".to_string()
                 }
             }
+            "UPDATE" => {
+                if parts.clone().count() < 2 {
+                    "Error: UPDATE command requires at least 2 arguments\r\n".to_string();
+                }
+                let key = parts.next().unwrap_or("");
+                if let Some(_) = state.get(key).await {
+                    let new_val = parts.next().unwrap_or("").to_string();
+                    let new_value = if new_val.contains(',') {
+                        if new_val.contains(':') {
+                            Value::Hash(
+                                new_val
+                                    .split(',')
+                                    .filter_map(|pair| {
+                                        let mut kv = pair.splitn(2, ':');
+                                        if let (Some(k), Some(v)) = (kv.next(), kv.next()) {
+                                            Some((k.to_string(), v.to_string()))
+                                        } else {
+                                            None
+                                        }
+                                    })
+                                    .collect(),
+                            )
+                        } else {
+                            Value::VecStr(new_val.split(',').map(|s| s.to_string()).collect())
+                        }
+                    } else {
+                        Value::String(new_val)
+                    };
+                    let expire_time = parts
+                        .next()
+                        .unwrap_or("")
+                        .to_string()
+                        .parse()
+                        .unwrap_or(DEFAULT_EXPIRTY);
+                    state.set(key.to_string(), new_value, expire_time);
+                    "OK\r\n".to_string()
+                } else {
+                    "Error: Key does not exist\r\n".to_string()
+                }
+            }
             "DEL" | "DELETE" => {
                 let key = parts.next().unwrap_or("");
                 state.delete(key).await;
                 "OK\r\n".to_string()
             }
+            "EXISTS" => {
+                let key = parts.next().unwrap_or("");
+                if state.get(key).await.is_some() {
+                    "YES\r\n".to_string()
+                } else {
+                    "NO\r\n".to_string()
+                }
+            }
+            "RENAME" => {
+                let old_key = parts.next().unwrap_or("");
+                let new_key = parts.next().unwrap_or("");
+                if let Some(value) = state.get(old_key).await {
+                    state.set(new_key.to_string(), value, DEFAULT_EXPIRTY);
+                    state.delete(old_key).await;
+                    "OK\r\n".to_string()
+                } else {
+                    "Error: Key does not exist\r\n".to_string()
+                }
+            }
+            "TYPE" => {
+                let key = parts.next().unwrap_or("");
+                if let Some(value) = state.get(key).await {
+                    let value_type = match value {
+                        Value::String(_) => "String",
+                        Value::VecStr(_) => "VecStr",
+                        Value::Hash(_) => "Hash",
+                    };
+                    format!("{value_type}\r\n")
+                } else {
+                    "Nil\r\n".to_string()
+                }
+            }
+            "CLEARALL" => {
+                let mut db = state.db.write().unwrap();
+                db.clear();
+                "OK\r\n".to_string()
+            }
+            "PING" => "PONG\r\n".to_string(),
             _ => "Unknown command\r\n".to_string(),
         };
         writer.write_all(response.as_bytes()).await.unwrap();
