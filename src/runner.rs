@@ -61,7 +61,23 @@ async fn handle_client(stream: TcpStream, state: SharedState) {
                 let key = parts.next().unwrap_or("").to_string();
                 let value = parts.next().unwrap_or("").to_string();
                 let value_type = if value.contains(',') {
-                    Value::VecStr(value.split(',').map(|s| s.to_string()).collect())
+                    if value.contains(':') {
+                        Value::Hash(
+                            value
+                                .split(',')
+                                .filter_map(|pair| {
+                                    let mut kv = pair.splitn(2, ':');
+                                    if let (Some(k), Some(v)) = (kv.next(), kv.next()) {
+                                        Some((k.to_string(), v.to_string()))
+                                    } else {
+                                        None
+                                    }
+                                })
+                                .collect(),
+                        )
+                    } else {
+                        Value::VecStr(value.split(',').map(|s| s.to_string()).collect())
+                    }
                 } else {
                     Value::String(value)
                 };
@@ -81,6 +97,13 @@ async fn handle_client(stream: TcpStream, state: SharedState) {
                     let (value, value_type) = match value {
                         Value::String(s) => (s, "String"),
                         Value::VecStr(v) => (v.join(","), "VecStr"),
+                        Value::Hash(h) => (
+                            h.iter()
+                                .map(|(k, v)| format!("{}:{}", k, v))
+                                .collect::<Vec<String>>()
+                                .join(","),
+                            "Hash",
+                        ),
                     };
                     format!("{value}, type: {value_type}\r\n")
                 } else {

@@ -6,7 +6,8 @@ use std::time::{Duration, Instant};
 pub enum Value {
     String(String),
     VecStr(Vec<String>),
-    // Future types can be added here (e.g., Hash, List, Set, etc.)
+    Hash(HashMap<String, String>),
+    // Future types can be added here (e.g., List, Set, etc.)
 }
 
 type Db = Arc<RwLock<HashMap<String, (Value, Instant)>>>; // In-memory database with expiration time
@@ -37,6 +38,7 @@ impl State {
                 let value = match value {
                     Value::String(s) => Some(Value::String(s.clone())),
                     Value::VecStr(v) => Some(Value::VecStr(v.clone())),
+                    Value::Hash(h) => Some(Value::Hash(h.clone())),
                 };
                 return value;
             }
