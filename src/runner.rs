@@ -18,7 +18,8 @@ pub async fn run_app() {
     tokio::spawn(auto_expire(state.clone()));
 
     loop {
-        let (stream, _) = listener.accept().await.unwrap();
+        let (stream, addr) = listener.accept().await.unwrap();
+        println!("New client connected: {}", addr);
         let state = state.clone();
 
         tokio::spawn(async move {
