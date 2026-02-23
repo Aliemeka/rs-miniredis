@@ -6,7 +6,7 @@ A lightweight, blazingly-fast in-memory key-value store inspired by Redis, built
 
 - In-memory key-value storage
 - Automatic key expiration (TTL)
-- Support for string and list (comma-separated) values
+- Support for string, list (comma-separated), and hash (key:value pairs) values
 - Async TCP server via Tokio
 - Commands: `SET`, `GET`, `DEL`
 
@@ -59,6 +59,9 @@ echo "GET name" | nc 127.0.0.1 6379
 # SET a list value (comma-separated)
 echo "SET colors red,green,blue" | nc 127.0.0.1 6379
 
+# SET a hash value (comma-separated key:value pairs)
+echo "SET user name:Alice,age:30,city:Lagos" | nc 127.0.0.1 6379
+
 # DELETE a key
 echo "DEL name" | nc 127.0.0.1 6379
 ```
@@ -80,6 +83,18 @@ SET fruits apple,banana,mango
 GET fruits
 # => apple,banana,mango, type: VecStr
 ```
+
+### Hash Values
+
+Pass comma-separated `key:value` pairs to store a hash map:
+
+```
+SET user name:Alice,age:30,city:Lagos
+GET user
+# => name:Alice,age:30,city:Lagos, type: Hash
+```
+
+If any pair contains a `:`, the entire value is treated as a hash. Otherwise it falls back to a list.
 
 ## Project Structure
 
