@@ -1,6 +1,6 @@
 [package]
 name = "rs-miniredis"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = [
     "Emeka Allison <emeka.allison4@gmail.com>",
