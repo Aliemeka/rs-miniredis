@@ -10,17 +10,53 @@ A lightweight, blazingly-fast in-memory key-value store inspired by Redis, built
 - Async TCP server via Tokio
 - Commands: `SET`, `GET`, `UPDATE`, `DEL`, `EXISTS`, `RENAME`, `TYPE`, `CLEARALL`, `PING`
 
+## Installation
+
+Install directly from [crates.io](https://crates.io/crates/rs-miniredis):
+
+```bash
+cargo install rs-miniredis
+```
+
+## Running the Server
+
+```bash
+rs-miniredis
+```
+
+The server starts on `127.0.0.1:6379` by default.
+
+To specify a custom host and port:
+
+```bash
+rs-miniredis --host 0.0.0.0 --port 6379
+```
+
 ## Requirements
 
 - [Rust](https://www.rust-lang.org/tools/install)
 
-## Running the Server
+## Contributing
+
+Clone the repository
+
+```bash
+git clone https://github.com/Aliemeka/rs-miniredis.git
+```
+
+## Running the Server after cloning
 
 ```bash
 cargo run
 ```
 
-The server starts on `127.0.0.1:6379`.
+You can also pass host and port flags:
+
+```bash
+cargo run -- --host 0.0.0.0 --port 6379
+```
+
+The server starts on `127.0.0.1:6379` by default.
 
 ## Querying the Server with NetCat
 
@@ -98,17 +134,17 @@ echo "DEL name" | nc 127.0.0.1 6379
 
 ## Commands
 
-| Command           | Syntax                          | Description                                                              |
-| ----------------- | ------------------------------- | ------------------------------------------------------------------------ |
-| `SET`             | `SET <key> <value> [ttl]`       | Store a value. Optional TTL in seconds (default: 60).                    |
-| `GET`             | `GET <key>`                     | Retrieve a value by key. Returns `Nil` if not found or expired.          |
-| `UPDATE`          | `UPDATE <key> <value> [ttl]`    | Update an existing key. The new value can be a different type entirely.  |
-| `DEL` or `DELETE` | `DEL <key>` or `DELETE <key>`   | Delete a key.                                                            |
-| `EXISTS`          | `EXISTS <key>`                  | Returns `YES` if the key exists and has not expired, otherwise `NO`.     |
-| `RENAME`          | `RENAME <old_key> <new_key>`    | Rename a key. Returns an error if the key does not exist.                |
-| `TYPE`            | `TYPE <key>`                    | Returns the value type: `String`, `VecStr`, or `Hash`.                  |
-| `CLEARALL`        | `CLEARALL`                      | Delete all keys from the store.                                          |
-| `PING`            | `PING`                          | Health check. Returns `PONG`.                                            |
+| Command           | Syntax                        | Description                                                             |
+| ----------------- | ----------------------------- | ----------------------------------------------------------------------- |
+| `SET`             | `SET <key> <value> [ttl]`     | Store a value. Optional TTL in seconds (default: 60).                   |
+| `GET`             | `GET <key>`                   | Retrieve a value by key. Returns `Nil` if not found or expired.         |
+| `UPDATE`          | `UPDATE <key> <value> [ttl]`  | Update an existing key. The new value can be a different type entirely. |
+| `DEL` or `DELETE` | `DEL <key>` or `DELETE <key>` | Delete a key.                                                           |
+| `EXISTS`          | `EXISTS <key>`                | Returns `YES` if the key exists and has not expired, otherwise `NO`.    |
+| `RENAME`          | `RENAME <old_key> <new_key>`  | Rename a key. Returns an error if the key does not exist.               |
+| `TYPE`            | `TYPE <key>`                  | Returns the value type: `String`, `VecStr`, or `Hash`.                  |
+| `CLEARALL`        | `CLEARALL`                    | Delete all keys from the store.                                         |
+| `PING`            | `PING`                        | Health check. Returns `PONG`.                                           |
 
 ### List Values
 
@@ -147,6 +183,12 @@ UPDATE score 90,85,78
 # score is now a VecStr
 ```
 
+## Add to your project
+
+```bash
+cargo add rs-miniredis
+```
+
 ## Project Structure
 
 ```
@@ -159,3 +201,4 @@ src/
 ## Dependencies
 
 - [tokio](https://tokio.rs/) — Async runtime
+- [clap](https://docs.rs/clap) — CLI
