@@ -5,11 +5,11 @@
 //!
 //! ## As a library
 //! ```rust,no_run
-//! use rs_miniredis::{MiniRedisState, run_server};
+//! use rs_miniredis::{KeyStore, run_server};
 //!
 //! #[tokio::main]
 //! async fn main() {
-//!     let state = MiniRedisState::new();
+//!     let state = KeyStore::new();
 //!     run_server("127.0.0.1:6379", state).await.unwrap();
 //! }
 //! ```
