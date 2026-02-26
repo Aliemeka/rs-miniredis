@@ -10,6 +10,13 @@ authors = [
     "Ajaezo Kingsley <ajaezokingsley@gmail.com>",
     "Hadassah <tommy4gold@gmail.com>",
 ]
+description = "A lightweight, blazingly-fast in-memory key-value store inspired by Redis"
+license = "MIT"
+repository = "https://github.com/Aliemeka/rs-miniredis"
+homepage = "https://github.com/Aliemeka/rs-miniredis"
+readme = "README.md"
+keywords = ["redis", "key-value", "cache", "in-memory", "tokio"]
+categories = ["database", "caching", "network-programming"]
 
 [dependencies]
 tokio = { version = "1.49.0", features = ["full"] }

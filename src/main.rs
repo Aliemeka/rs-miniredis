@@ -1,5 +1,5 @@
 use clap::Parser;
-use rs_miniredis::{KeyState, run_server};
+use rs_miniredis::{KeyStore, run_server};
 
 #[derive(Parser)]
 #[command(
@@ -16,8 +16,10 @@ struct Cli {
 
 #[tokio::main]
 async fn main() {
-    let state = KeyState::new();
-    if let Err(e) = run_server("127.0.0.1:6379", state).await {
+    let cli = Cli::parse();
+    let addr = format!("{}:{}", cli.host, cli.port);
+    let state = KeyStore::new();
+    if let Err(e) = run_server(&addr, state).await {
         eprintln!("Server error: {}", e);
         std::process::exit(1);
     }

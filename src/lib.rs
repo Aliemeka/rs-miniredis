@@ -18,4 +18,4 @@ pub mod runner;
 pub mod state;
 
 pub use runner::run_server;
-pub use state::State as KeyState;
+pub use state::State as KeyStore;
