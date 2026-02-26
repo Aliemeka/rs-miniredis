@@ -1,5 +1,5 @@
 [package]
-name = "rs-redis-clone"
+name = "rs-miniredis"
 version = "0.1.0"
 edition = "2024"
 authors = [
@@ -13,3 +13,13 @@ authors = [
 
 [dependencies]
 tokio = { version = "1.49.0", features = ["full"] }
+clap = { version = "4", features = ["derive"] }
+
+
+[[bin]]
+name = "rs-miniredis"
+path = "src/main.rs"
+
+[lib]
+name = "rs_miniredis"
+path = "src/lib.rs"

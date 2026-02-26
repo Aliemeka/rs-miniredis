@@ -7,13 +7,12 @@ use tokio::time::sleep as tokio_sleep;
 
 const DEFAULT_EXPIRTY: u64 = 60; // default expiration time in seconds
 
-pub async fn run_app() {
-    let listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
+pub async fn run_server(addr: &str, state: State) -> Result<(), Box<dyn std::error::Error>> {
+    let listener = TcpListener::bind(addr).await.unwrap();
 
-    println!("Mini-Redis with Active TTL running on 127.0.0.1:6379");
+    println!("Mini-Redis with Active TTL running on {}", addr);
 
-    // initialize state
-    let state = SharedState::new(State::new());
+    let state = SharedState::new(state);
 
     tokio::spawn(auto_expire(state.clone()));
 

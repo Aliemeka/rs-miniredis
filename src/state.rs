@@ -53,3 +53,9 @@ impl State {
 }
 
 pub type SharedState = Arc<State>;
+
+impl Default for State {
+    fn default() -> Self {
+        Self::new()
+    }
+}
